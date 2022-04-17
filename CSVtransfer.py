@@ -102,7 +102,7 @@ def trace_get():
     start_freq = instrument.query_float('FREQuency:STARt?')
     span = instrument.query_float('FREQuency:SPAN?')
     print(trace_len)
-    step_size = span #/ (trace_len - 1) fixa vid riktig analys
+    step_size = span / (trace_len - 1)
 
     # Now write values into file
     file = open(filename, 'w')  # Open file for writing
@@ -111,7 +111,7 @@ def trace_get():
     while x < int(trace_len):  # Perform loop until all sweep points are covered
         file.write(f'{(start_freq + x * step_size):.1f}')  # Write adequate frequency information
         file.write(",")
-        amp = 100#float(csv_trace_data[x]) fixa vid riktig analys
+        amp = float(csv_trace_data[x])
         file.write(f'{amp:.2f}')  # Write adequate amplitude information
         file.write("\n")
         x = x + 1
