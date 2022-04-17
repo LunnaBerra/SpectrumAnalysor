@@ -9,6 +9,7 @@
 ################################################################################x
 #
 import csv
+import os
 import sys
 
 from PyQt5 import *
@@ -17,7 +18,6 @@ from PyQt5.QtGui import *
 from PyQt5.QtWidgets import *
 from pyqtgraph import PlotWidget, plot
 import pyqtgraph as pg
-
 
 # import Test
 import Test
@@ -77,6 +77,7 @@ class Ui_MainWindow(object):
         self.frame.setObjectName(u"frame")
         self.frame.setFrameShape(QFrame.StyledPanel)
         self.frame.setFrameShadow(QFrame.Raised)
+
         self.welcomeText = QPlainTextEdit(self.frame)
         self.welcomeText.setObjectName(u"welcomeText")
         self.welcomeText.setGeometry(QRect(-5, 10, 551, 391))
@@ -88,9 +89,14 @@ class Ui_MainWindow(object):
         self.frame_4.setObjectName(u"frame_4")
         self.frame_4.setFrameShape(QFrame.StyledPanel)
         self.frame_4.setFrameShadow(QFrame.Raised)
-        self.valuesDisplay = QTextBrowser(self.frame_4)
+
+        self.valuesDisplay = QTableWidget(self.frame_4)
         self.valuesDisplay.setObjectName(u"valuesDisplay")
         self.valuesDisplay.setGeometry(QRect(0, 0, 541, 401))
+        self.valuesDisplay.setColumnCount(2)
+        self.valuesDisplay.setRowCount(1)
+        self.valuesDisplay.setItem(0, 0, QTableWidgetItem("Frequency"))
+        self.valuesDisplay.setItem(0, 1, QTableWidgetItem("Amplitude"))
 
         self.gridLayout.addWidget(self.frame_4, 1, 1, 1, 1)
 
@@ -262,6 +268,7 @@ class Ui_MainWindow(object):
         self.selectPlotFileButton = QPushButton(self.frame_2)
         self.selectPlotFileButton.setObjectName(u"selectPlotFileButton")
         self.selectPlotFileButton.setGeometry(QRect(520, 270, 21, 21))
+        self.selectPlotFileButton.clicked.connect(self.get_file_name)
 
         self.clearPlotButton = QPushButton(self.frame_2)
         self.clearPlotButton.setObjectName(u"clearPlotButton")
@@ -290,12 +297,24 @@ class Ui_MainWindow(object):
 
     # setupUi
 
+    def get_file_name(self):
+
+        file_filter = 'Data file (*.csv)'
+        response = QFileDialog.getOpenFileName(
+            caption='Select a CSV file',
+            directory=os.getcwd(),
+            filter=file_filter
+        )
+        self.selectedPlotFile.setText(response[0])
+
+
     def pressed_exit(self):
         self.app.quit()
 
     def pressed_start_test(self):
         self.typeAdjustment()
-        Test.testing(self.saveDeviatedSamples, self.endTime, self.freqCenter, self.freqSpan, self.stopOnDeviation, self.abort_test)
+        Test.testing(self.saveDeviatedSamples, self.endTime, self.freqCenter, self.freqSpan, self.stopOnDeviation,
+                     self.abort_test)
         self.abort_test = False
 
     def typeAdjustment(self):
@@ -349,14 +368,20 @@ class Ui_MainWindow(object):
         self.abort_test = True
 
     def pressed_clear_plot(self):
-        self.app.quit()
+        self.plotDisplay.clear()
+        self.valuesDisplay.clear()
+        self.valuesDisplay.setColumnCount(2)
+        self.valuesDisplay.setRowCount(1)
+        self.valuesDisplay.setItem(0, 0, QTableWidgetItem("Frequency"))
+        self.valuesDisplay.setItem(0, 1, QTableWidgetItem("Amplitude"))
 
     def pressed_plot(self):
+        self.pressed_clear_plot()
         if len(self.selectPlotFileButton.text()) == 0:
-            #return
-            pass
-        #fileDirectory = self.selectPlotFileButton.text()
-        file = open(r'C:\Users\simon\PycharmProjects\SpectrumAnalysor\Samples\Results\sample0.csv')
+            return
+        fileDirectory = self.selectedPlotFile.text()
+        print(fileDirectory)
+        file = open(fileDirectory)
         csvreader = csv.reader(file)
         header = next(csvreader)
         print(header)
@@ -368,15 +393,19 @@ class Ui_MainWindow(object):
 
         freq = []
         amp = []
-
+        self.valuesDisplay.setRowCount(len(rows)+1)
+        z = 1
         for x in rows:
             k = 0
             for i in x:
                 if k == 0:
                     freq.append(float(i))
+                    self.valuesDisplay.setItem(z, 0, QTableWidgetItem(i))
                 elif k == 1:
                     amp.append(float(i))
+                    self.valuesDisplay.setItem(z, 1, QTableWidgetItem(i))
                 k = k + 1
+            z = z + 1
         print(freq)
         print(amp)
 
