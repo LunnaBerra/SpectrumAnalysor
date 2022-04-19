@@ -28,7 +28,7 @@ from RsInstrument import *
 from time import sleep
 
 # Define variables
-resource = 'TCPIP::10.205.0.184::INSTR'  # VISA resource string for the device
+resource = 'TCPIP0::FPC1000-102279::inst0::INSTR'  # VISA resource string for the device
 # resource = 'TCPIP::172.16.10.10::INSTR'  # Original resource string when using USB connection
 recdur = 10  # Time in seconds to find max hold peaks
 filename = r'C:\Users\simon\PycharmProjects\SpectrumAnalysor\Samples\TraceFile.csv'

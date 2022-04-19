@@ -70,6 +70,9 @@ class Ui_MainWindow(object):
         self.plotDisplay = pg.PlotWidget(self.frame_3)
         self.plotDisplay.setObjectName(u"plotDisplay")
         self.plotDisplay.setGeometry(QRect(0, 10, 541, 391))
+        self.plotDisplay.setLabel('bottom', "Frequency")
+        self.plotDisplay.setLabel('left', "dBm")
+        self.plotDisplay.setLabel('top', "Frequency Spectrum")
 
         self.gridLayout.addWidget(self.frame_3, 0, 1, 1, 1)
 
