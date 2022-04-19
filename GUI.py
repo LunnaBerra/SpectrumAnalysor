@@ -98,8 +98,8 @@ class Ui_MainWindow(object):
         self.valuesDisplay.setGeometry(QRect(0, 0, 541, 401))
         self.valuesDisplay.setColumnCount(2)
         self.valuesDisplay.setRowCount(1)
-        self.valuesDisplay.setItem(0, 0, QTableWidgetItem("Frequency"))
-        self.valuesDisplay.setItem(0, 1, QTableWidgetItem("Amplitude"))
+        self.valuesDisplay.setItem(0, 0, QTableWidgetItem("Frequency (Hz)"))
+        self.valuesDisplay.setItem(0, 1, QTableWidgetItem("Amplitude (dBm)"))
 
         self.gridLayout.addWidget(self.frame_4, 1, 1, 1, 1)
 
@@ -375,8 +375,8 @@ class Ui_MainWindow(object):
         self.valuesDisplay.clear()
         self.valuesDisplay.setColumnCount(2)
         self.valuesDisplay.setRowCount(1)
-        self.valuesDisplay.setItem(0, 0, QTableWidgetItem("Frequency"))
-        self.valuesDisplay.setItem(0, 1, QTableWidgetItem("Amplitude"))
+        self.valuesDisplay.setItem(0, 0, QTableWidgetItem("Frequency (Hz)"))
+        self.valuesDisplay.setItem(0, 1, QTableWidgetItem("Amplitude (dBm)"))
 
     def pressed_plot(self):
         self.pressed_clear_plot()
