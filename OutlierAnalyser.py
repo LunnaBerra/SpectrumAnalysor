@@ -1,6 +1,6 @@
 import pandas as pd
 from scipy import stats
-import plotter
+
 
 
 def init(fileName, freqLow: float, freqHigh: float, ampHigh: float, ampLow: float):
@@ -42,5 +42,6 @@ def init(fileName, freqLow: float, freqHigh: float, ampHigh: float, ampLow: floa
     while i < len(outlierFrequncies):
         if outlierFrequncies[i] > freqLow or outlierFrequncies[i] < freqHigh:
             return True
+        i = i + 1
 
     return False
