@@ -317,7 +317,7 @@ class Ui_MainWindow(object):
     def pressed_start_test(self):
         self.typeAdjustment()
         Test.testing(self.saveDeviatedSamples, self.endTime, self.freqCenter, self.freqSpan, self.stopOnDeviation,
-                     self.abort_test)
+                     self.abort_test, self.ampHigh, self.ampLow)
         self.abort_test = False
 
     def typeAdjustment(self):

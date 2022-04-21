@@ -3,7 +3,7 @@ from scipy import stats
 import plotter
 
 
-def init(fileName, freqLow: float, freqHigh: float):
+def init(fileName, freqLow: float, freqHigh: float, ampHigh: float, ampLow: float):
     df = pd.read_csv(fileName)
     W_DBm = df.loc[:, lambda df: ['Power in dBm']]
 
@@ -18,17 +18,16 @@ def init(fileName, freqLow: float, freqHigh: float):
     diffs = []
     i = 0
     while i < len(df.__array__()):
-        diffs.append(float(abs(meanPoints - float(W_DBm.iloc[i]))))
+        diffs.append(float(meanPoints - float(W_DBm.iloc[i])))
         i = i + 1
 
-    meanDiffs = stats.trim_mean(diffs, 0.25)
-
-    outlierLimit = 5 * meanDiffs
+    outlierUpperLimit = ampHigh
+    outlierLowerLimit = ampLow
 
     outliers = []
     i = 0
     while i < len(df.__array__()):
-        if abs(diffs[i]) > outlierLimit:
+        if diffs[i] > outlierUpperLimit or diffs[i] < -outlierLowerLimit:
             outliers.append(i)
         i = i + 1
 

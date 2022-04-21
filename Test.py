@@ -7,7 +7,7 @@ from time import sleep
 import OutlierAnalyser
 
 
-def testing(saveManySamples: bool, endTime: int, freqCenter: float, freqSpan: float, stopOnDeviation: bool, abort: bool):
+def testing(saveManySamples: bool, endTime: int, freqCenter: float, freqSpan: float, stopOnDeviation: bool, abort: bool, ampHigh: float, ampLow: float):
     timeCompleted = 0
 
     while timeCompleted < endTime:
@@ -17,7 +17,7 @@ def testing(saveManySamples: bool, endTime: int, freqCenter: float, freqSpan: fl
         fileName = r'C:\Users\simon\PycharmProjects\SpectrumAnalysor\Samples\TraceFile.csv'
         freqStart = freqCenter - (freqSpan/2) + 1
         freqEnd = freqCenter + (freqSpan/2) - 1
-        outlier = OutlierAnalyser.init(fileName, freqStart, freqEnd)
+        outlier = OutlierAnalyser.init(fileName, freqStart, freqEnd, ampHigh, ampLow)
         if outlier:
             CarGet.sampler(saveManySamples)
             if stopOnDeviation:
