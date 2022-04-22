@@ -23,6 +23,8 @@ import pyqtgraph as pg
 
 
 # import Test
+from scipy import stats
+
 import Test
 
 
@@ -428,11 +430,14 @@ class Ui_MainWindow(object):
                     self.valuesDisplay.setItem(z, 1, QTableWidgetItem(i))
                 k = k + 1
             z = z + 1
-        print(freq)
-        print(amp)
 
+        highLimit = [stats.trim_mean(amp, 0.25) + self.ampHigh]*len(freq)
+        lowLimit = [stats.trim_mean(amp, 0.25) - self.ampLow] * len(freq)
+        print(highLimit[0], lowLimit[0], self.ampLow, self.ampHigh)
         # plot data: x, y values
         self.plotDisplay.plot(freq, amp)
+        self.plotDisplay.plot(freq, highLimit)
+        self.plotDisplay.plot(freq, lowLimit)
         self.update_status("Plot completed...")
 
     def yes_no_1_changed(self):
