@@ -11,6 +11,8 @@
 import csv
 import os
 import sys
+from time import sleep
+
 
 from PyQt5 import *
 from PyQt5.QtCore import *
@@ -19,8 +21,10 @@ from PyQt5.QtWidgets import *
 from pyqtgraph import PlotWidget, plot
 import pyqtgraph as pg
 
+
 # import Test
 import Test
+
 
 
 class Ui_MainWindow(object):
@@ -310,14 +314,27 @@ class Ui_MainWindow(object):
         )
         self.selectedPlotFile.setText(response[0])
 
+    def update_status(self, message):
+        self.welcomeText.appendPlainText(message)
+
+    def clear_status(self):
+        self.welcomeText.clear()
 
     def pressed_exit(self):
+        self.update_status("The core temperature has reached critical levels. Please RUN FOR YOUR LIFE!!!!")
         self.app.quit()
 
     def pressed_start_test(self):
+        self.clear_status()
+        self.update_status("Commencing test sequence...")
         self.typeAdjustment()
+        self.update_status("Type adjustment completed...")
         Test.testing(self.saveDeviatedSamples, self.endTime, self.freqCenter, self.freqSpan, self.stopOnDeviation,
                      self.abort_test, self.ampHigh, self.ampLow)
+        if self.abort_test == False:
+            self.update_status("Test sequence completed...")
+        else:
+            self.update_status("Test aborted...")
         self.abort_test = False
 
     def typeAdjustment(self):
@@ -371,6 +388,7 @@ class Ui_MainWindow(object):
         self.abort_test = True
 
     def pressed_clear_plot(self):
+        self.update_status("Plot cleared...")
         self.plotDisplay.clear()
         self.valuesDisplay.clear()
         self.valuesDisplay.setColumnCount(2)
@@ -379,6 +397,7 @@ class Ui_MainWindow(object):
         self.valuesDisplay.setItem(0, 1, QTableWidgetItem("Amplitude (dBm)"))
 
     def pressed_plot(self):
+        self.clear_status()
         self.pressed_clear_plot()
         if len(self.selectPlotFileButton.text()) == 0:
             return
@@ -396,7 +415,7 @@ class Ui_MainWindow(object):
 
         freq = []
         amp = []
-        self.valuesDisplay.setRowCount(len(rows)+1)
+        self.valuesDisplay.setRowCount(len(rows) + 1)
         z = 1
         for x in rows:
             k = 0
@@ -412,11 +431,9 @@ class Ui_MainWindow(object):
         print(freq)
         print(amp)
 
-        hour = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
-        temperature = [30, 32, 34, 32, 33, 31, 29, 32, 35, 45]
-
         # plot data: x, y values
         self.plotDisplay.plot(freq, amp)
+        self.update_status("Plot completed...")
 
     def yes_no_1_changed(self):
         if self.yesNo1.currentText() == "No":
@@ -448,19 +465,20 @@ class Ui_MainWindow(object):
     def retranslateUi(self, MainWindow):
         MainWindow.setWindowTitle(QCoreApplication.translate("MainWindow", u"MainWindow", None))
         self.welcomeText.setPlainText(QCoreApplication.translate("MainWindow", u" Welcome!\n"
-                                                                               " This is the operations GUI for the detection of GNSS tracers. The goal with the product is\n"
-                                                                               " to use antennas to detect the trackers that can be used to find people with protected\n"
-                                                                               " identities. This technology can hopefully be of use when protecting those in unfortunate\n"
-                                                                               " circumstances.\n"
-                                                                               " We hope that you will find the software easy to use.\n"
-                                                                               "\n"
-                                                                               " Prerequisites:\n"
-                                                                               " Spectrum Analyser FCP 1*00 from Rhode and Schwartz\n"
-                                                                               " An antenna setup connected to the spectrum analyser\n"
-                                                                               "\n"
-                                                                               " Thank you for using our product,\n"
-                                                                               " Regards,\n"
-                                                                               " The team behind GPSFinder", None))
+                                                                                     " This is the operations GUI for the detection of GNSS tracers. The goal with the product is\n"
+                                                                                     " to use antennas to detect the trackers that can be used to find people with protected\n"
+                                                                                     " identities. This technology can hopefully be of use when protecting those in unfortunate\n"
+                                                                                     " circumstances.\n"
+                                                                                     " We hope that you will find the software easy to use.\n"
+                                                                                     "\n"
+                                                                                     " Prerequisites:\n"
+                                                                                     " Spectrum Analyser FCP 1*00 from Rhode and Schwartz\n"
+                                                                                     " An antenna setup connected to the spectrum analyser\n"
+                                                                                     "\n"
+                                                                                     " Thank you for using our product,\n"
+                                                                                     " Regards,\n"
+                                                                                     " The team behind GPSFinder",
+                                                                       None))
         self.freqCenterInput.setPlaceholderText(QCoreApplication.translate("MainWindow", u"Frequency Center", None))
         self.freqSpanInput.setPlaceholderText(QCoreApplication.translate("MainWindow", u"Frequency Span", None))
         self.lowAmpInput.setPlaceholderText(
