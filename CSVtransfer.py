@@ -34,7 +34,7 @@ recdur = 10  # Time in seconds to find max hold peaks
 filename = r'C:\Users\simon\PycharmProjects\SpectrumAnalysor\Samples\TraceFile.csv'
 
 # Define the device handle
-instrument = RsInstrument('TCPIP::192.168.56.101::HISLIP', True, True, "Simulate=True")
+instrument = RsInstrument(resource, reset=True, id_query=True, options="SelectVisa='rs'")
 '''
 - option SelectVisa:
     - 'SelectVisa = 'socket' - uses no VISA implementation for socket connections 
@@ -77,7 +77,7 @@ def meas_prep(freqCenter, freqSpan):
     - Set Span to 100 MHz
     - Set Trace to Max Hold (and Positive Peak automatically)
     """
-
+    print(freqCenter,freqSpan)
     instrument.write_str_with_opc('FREQuency:CENTer ' + str(freqCenter))  # Center Frequency to 2450 MHz
     instrument.write_str_with_opc('FREQuency:SPAN ' + str(freqSpan))  # SPAN is 100 MHz now
     instrument.write_str_with_opc('DISPlay:TRACe1:MODE MAXHold')  # Trace to Max Hold
@@ -129,6 +129,6 @@ def runner(freqCenter, freqSpan):
     com_check()
     meas_prep(freqCenter, freqSpan)
     trace_get()
-    close()
+    #close()
     print('Program successfully ended.')
     print('Wrote trace data into', filename)
