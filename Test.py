@@ -22,8 +22,7 @@ def testing(saveManySamples: bool, endTime: int, freqCenter: float, freqSpan: fl
             CarGet.sampler(saveManySamples)
             if stopOnDeviation:
                 break
-        sleep(10 / 1000)
-        timeCompleted = timeCompleted + 10
+        timeCompleted = timeCompleted + 10.5
 
 
 # 2: Checks for outlier

@@ -35,6 +35,7 @@ filename = r'C:\Users\simon\PycharmProjects\SpectrumAnalysor\Samples\TraceFile.c
 
 # Define the device handle
 instrument = RsInstrument(resource, reset=True, id_query=True, options="SelectVisa='rs'")
+#instrument = RsInstrument('TCPIP::192.168.56.101::HISLIP', True, True, "Simulate=True")
 '''
 - option SelectVisa:
     - 'SelectVisa = 'socket' - uses no VISA implementation for socket connections 
@@ -89,7 +90,7 @@ def trace_get():
     instrument.write_str_with_opc('INITiate:CONTinuous ON')  # Continuous measurement on trace 1 ON
     print('Please wait for maxima to be found...')
     sleep(int(recdur))  # Wait for preset record time
-    instrument.write('INITiate:CONTinuous OFF')  # Continuous measurement on trace 1 OFF
+    #instrument.write('INITiate:CONTinuous OFF')  # Continuous measurement on trace 1 OFF
     instrument.query_opc()
     sleep(0.5)
 
@@ -103,7 +104,7 @@ def trace_get():
     span = instrument.query_float('FREQuency:SPAN?')
     print(trace_len)
     step_size = span / (trace_len - 1)
-
+    instrument.write('INITiate:CONTinuous OFF')
     # Now write values into file
     file = open(filename, 'w')  # Open file for writing
     file.write("Frequency in Hz,Power in dBm\n")  # Write the headline

@@ -1,0 +1,19 @@
+clc
+clf
+clear
+i=0;
+
+while true
+    filename = 'No GPS/test1_5min_0dBm_87cm/sample' + string(i) + '.csv';
+    if isfile(filename)
+        Array1 = xlsread(filename);
+        A1colx = Array1(2:end,1);
+        A1coly = Array1(2:end,2);
+        plot(A1colx,A1coly)
+        i=i+1;
+    else
+        break;
+    end
+end
+
+
