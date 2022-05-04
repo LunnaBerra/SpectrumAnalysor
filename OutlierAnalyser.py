@@ -41,6 +41,7 @@ def init(fileName, freqLow: float, freqHigh: float, ampHigh: float, ampLow: floa
     i = 0
     while i < len(outlierFrequncies):
         if outlierFrequncies[i] > freqLow or outlierFrequncies[i] < freqHigh:
+            print('GPS detected!')
             return True
         i = i + 1
 

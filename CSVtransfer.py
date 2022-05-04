@@ -53,7 +53,7 @@ instrument = RsInstrument(resource, reset=True, id_query=True, options="SelectVi
 def com_prep():
     """Preparation of the communication (termination, timeout, etc...)"""
 
-    print(f'VISA Manufacturer: {instrument.visa_manufacturer}')  # Confirm VISA package to be chosen
+    #print(f'VISA Manufacturer: {instrument.visa_manufacturer}')  # Confirm VISA package to be chosen
     instrument.visa_timeout = 5000  # Timeout in ms for VISA Read Operations
     instrument.opc_timeout = 3000  # Timeout in ms for opc-synchronised operations
     instrument.instrument_status_checking = True  # Error check after each command
@@ -68,7 +68,7 @@ def close():
 def com_check():
     """Check communication with the device by requesting it's ID"""
     idn_response = instrument.query_str('*IDN?')
-    print('Hello, I am ' + idn_response)
+    #print('Hello, I am ' + idn_response)
 
 
 def meas_prep(freqCenter, freqSpan):
@@ -78,7 +78,7 @@ def meas_prep(freqCenter, freqSpan):
     - Set Span to 100 MHz
     - Set Trace to Max Hold (and Positive Peak automatically)
     """
-    print(freqCenter,freqSpan)
+    #print(freqCenter,freqSpan)
     instrument.write_str_with_opc('FREQuency:CENTer ' + str(freqCenter))  # Center Frequency to 2450 MHz
     instrument.write_str_with_opc('FREQuency:SPAN ' + str(freqSpan))  # SPAN is 100 MHz now
     instrument.write_str_with_opc('DISPlay:TRACe1:MODE MAXHold')  # Trace to Max Hold
@@ -88,7 +88,7 @@ def trace_get():
     """Initialize continuous measurement, stop it after the desired time, query trace data"""
 
     instrument.write_str_with_opc('INITiate:CONTinuous ON')  # Continuous measurement on trace 1 ON
-    print('Please wait for maxima to be found...')
+    print('Searching for evidence of GPS trackers...')
     sleep(int(recdur))  # Wait for preset record time
     #instrument.write('INITiate:CONTinuous OFF')  # Continuous measurement on trace 1 OFF
     instrument.query_opc()
@@ -102,7 +102,7 @@ def trace_get():
     # Reconstruct x data (frequency for each point) as it can not be directly read from the instrument
     start_freq = instrument.query_float('FREQuency:STARt?')
     span = instrument.query_float('FREQuency:SPAN?')
-    print(trace_len)
+    #print(trace_len)
     step_size = span / (trace_len - 1)
     instrument.write('INITiate:CONTinuous OFF')
     # Now write values into file
@@ -131,5 +131,5 @@ def runner(freqCenter, freqSpan):
     meas_prep(freqCenter, freqSpan)
     trace_get()
     #close()
-    print('Program successfully ended.')
+    print('Search instance completed.')
     print('Wrote trace data into', filename)

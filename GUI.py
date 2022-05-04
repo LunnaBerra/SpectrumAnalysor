@@ -331,6 +331,7 @@ class Ui_MainWindow(object):
         self.update_status("Commencing test sequence...")
         self.typeAdjustment()
         self.update_status("Type adjustment completed...")
+        self.update_status("Searching for evidence of GPS trackers...")
         Test.testing(self.saveDeviatedSamples, self.endTime, self.freqCenter, self.freqSpan, self.stopOnDeviation,
                      self.abort_test, self.ampHigh, self.ampLow)
         if self.abort_test == False:
