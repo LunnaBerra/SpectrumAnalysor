@@ -5,8 +5,8 @@ i=0;
 
 while true
     %filename = 'No GPS/test1_10min_0dBm_87cm_aborted/sample' + string(i) + '.csv';
-    %filename = 'Yepson/test1_10min_50dBm_87cm/sample' + string(i) + '.csv';
-    filename = 'Katt\test1_5min_50dBm_87cm/sample' + string(i) + '.csv';
+    filename = 'Yepson/test1_3min_50dBm_87cm_låda_metall_externelektronik/sample' + string(i) + '.csv';
+    %filename = 'Katt\test1_5min_50dBm_87cm/sample' + string(i) + '.csv';
 
     if isfile(filename)
         Array1 = csvread(filename,1,0);

@@ -34,8 +34,8 @@ recdur = 10  # Time in seconds to find max hold peaks
 filename = r'C:\Users\simon\PycharmProjects\SpectrumAnalysor\Samples\TraceFile.csv'
 
 # Define the device handle
-instrument = RsInstrument(resource, reset=True, id_query=True, options="SelectVisa='rs'")
-#instrument = RsInstrument('TCPIP::192.168.56.101::HISLIP', True, True, "Simulate=True")
+#instrument = RsInstrument(resource, reset=True, id_query=True, options="SelectVisa='rs'")
+instrument = RsInstrument('TCPIP::192.168.56.101::HISLIP', True, True, "Simulate=True")
 '''
 - option SelectVisa:
     - 'SelectVisa = 'socket' - uses no VISA implementation for socket connections 
