@@ -26,6 +26,7 @@ https://rsinstrument.readthedocs.io/en/latest/
 # --> Import necessary packets
 from RsInstrument import *
 from time import sleep
+from timeit import default_timer as timer
 
 # Define variables
 resource = 'TCPIP0::FPC1000-102279::inst0::INSTR'  # VISA resource string for the device
@@ -34,8 +35,8 @@ recdur = 10  # Time in seconds to find max hold peaks
 filename = r'C:\Users\simon\PycharmProjects\SpectrumAnalysor\Samples\TraceFile.csv'
 
 # Define the device handle
-#instrument = RsInstrument(resource, reset=True, id_query=True, options="SelectVisa='rs'")
-instrument = RsInstrument('TCPIP::192.168.56.101::HISLIP', True, True, "Simulate=True")
+instrument = RsInstrument(resource, reset=True, id_query=True, options="SelectVisa='rs'")
+# instrument = RsInstrument('TCPIP::192.168.56.101::HISLIP', True, True, "Simulate=True")
 '''
 - option SelectVisa:
     - 'SelectVisa = 'socket' - uses no VISA implementation for socket connections 
@@ -53,7 +54,7 @@ instrument = RsInstrument('TCPIP::192.168.56.101::HISLIP', True, True, "Simulate
 def com_prep():
     """Preparation of the communication (termination, timeout, etc...)"""
 
-    #print(f'VISA Manufacturer: {instrument.visa_manufacturer}')  # Confirm VISA package to be chosen
+    # print(f'VISA Manufacturer: {instrument.visa_manufacturer}')  # Confirm VISA package to be chosen
     instrument.visa_timeout = 5000  # Timeout in ms for VISA Read Operations
     instrument.opc_timeout = 3000  # Timeout in ms for opc-synchronised operations
     instrument.instrument_status_checking = True  # Error check after each command
@@ -68,7 +69,7 @@ def close():
 def com_check():
     """Check communication with the device by requesting it's ID"""
     idn_response = instrument.query_str('*IDN?')
-    #print('Hello, I am ' + idn_response)
+    # print('Hello, I am ' + idn_response)
 
 
 def meas_prep(freqCenter, freqSpan):
@@ -78,7 +79,7 @@ def meas_prep(freqCenter, freqSpan):
     - Set Span to 100 MHz
     - Set Trace to Max Hold (and Positive Peak automatically)
     """
-    #print(freqCenter,freqSpan)
+    # print(freqCenter,freqSpan)
     instrument.write_str_with_opc('FREQuency:CENTer ' + str(freqCenter))  # Center Frequency to 2450 MHz
     instrument.write_str_with_opc('FREQuency:SPAN ' + str(freqSpan))  # SPAN is 100 MHz now
     instrument.write_str_with_opc('DISPlay:TRACe1:MODE MAXHold')  # Trace to Max Hold
@@ -90,7 +91,7 @@ def trace_get():
     instrument.write_str_with_opc('INITiate:CONTinuous ON')  # Continuous measurement on trace 1 ON
     print('Searching for evidence of GPS trackers...')
     sleep(int(recdur))  # Wait for preset record time
-    #instrument.write('INITiate:CONTinuous OFF')  # Continuous measurement on trace 1 OFF
+    # instrument.write('INITiate:CONTinuous OFF')  # Continuous measurement on trace 1 OFF
     instrument.query_opc()
     sleep(0.5)
 
@@ -102,7 +103,7 @@ def trace_get():
     # Reconstruct x data (frequency for each point) as it can not be directly read from the instrument
     start_freq = instrument.query_float('FREQuency:STARt?')
     span = instrument.query_float('FREQuency:SPAN?')
-    #print(trace_len)
+    # print(trace_len)
     step_size = span / (trace_len - 1)
     instrument.write('INITiate:CONTinuous OFF')
     # Now write values into file
@@ -129,7 +130,12 @@ def runner(freqCenter, freqSpan):
     com_prep()
     com_check()
     meas_prep(freqCenter, freqSpan)
+    startTime = timer()
     trace_get()
-    #close()
+    endTime = timer()
+
+    print("Time of operation: " + str(endTime - startTime) + "s.")
+    # close()
     print('Search instance completed.')
     print('Wrote trace data into', filename)
+    return endTime - startTime
